@@ -1,0 +1,70 @@
+@using CardGames.Entities.Scoundrel
+
+<div @onclick="PerformCardAction" class="card m-1">
+    @if (ThisCard != null)
+    {
+        <div class="fs-1 suit" style="color: @GetColor();">@GetSuit()</div>
+        <div class="fs-1 rank" style="color: @GetColor();">@GetRank()</div>
+    }
+    else
+    {
+        <div class="fs-1 empty">X</div>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public required Action<int> CardAction { get; set; }
+
+    [Parameter]
+    public int ThisCardIndex { get; set; }
+
+    [Parameter]
+    public CardGames.Entities.Card? ThisCard { get; set; }
+
+    [Parameter]
+    public Action? Refresh { get; set; }
+
+    private void PerformCardAction()
+    {
+        if (ThisCardIndex != -1)
+        {
+            CardAction(ThisCardIndex);
+            Refresh?.Invoke();
+        }
+    }
+
+    private string GetColor() => ThisCard?.Suit switch
+    {
+        Entities.Suit.Hearts or Entities.Suit.Diamonds => "red",
+        Entities.Suit.Spades or Entities.Suit.Clubs => "black",
+        _ => "green"
+    };
+
+    private string GetSuit() => ThisCard?.Suit switch
+    {
+        Entities.Suit.Hearts => "♥",
+        Entities.Suit.Diamonds => "♦",
+        Entities.Suit.Spades => "♠",
+        Entities.Suit.Clubs => "♣",
+        _ => "-"
+    };
+
+    private string GetRank() => ThisCard?.Rank switch
+    {
+        Entities.Rank.Spot2 => "2",
+        Entities.Rank.Spot3 => "3",
+        Entities.Rank.Spot4 => "4",
+        Entities.Rank.Spot5 => "5",
+        Entities.Rank.Spot6 => "6",
+        Entities.Rank.Spot7 => "7",
+        Entities.Rank.Spot8 => "8",
+        Entities.Rank.Spot9 => "9",
+        Entities.Rank.Spot10 => "10",
+        Entities.Rank.Jack => "J",
+        Entities.Rank.Queen => "Q",
+        Entities.Rank.King => "K",
+        Entities.Rank.Ace => "A",
+        _ => ""
+    };
+}

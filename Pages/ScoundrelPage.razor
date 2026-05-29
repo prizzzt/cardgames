@@ -1,0 +1,63 @@
+﻿@page "/scoundrel"
+@using global::CardGames.Components
+@using global::CardGames.Entities
+@using global::CardGames.Entities.Scoundrel
+
+<PageTitle>Scoundrel</PageTitle>
+
+<h1>Scoundrel</h1>
+
+@if (dungeon.State == GameState.Continues)
+{
+    <div class="input-group mb-3">
+        <span class="input-group-text">Health</span>
+        <span class="input-group-text">@dungeon.Health/@Dungeon.HealthMax</span>
+        <span class="input-group-text">Cards left</span>
+        <span class="input-group-text">@dungeon.Deck.Count</span>
+    </div>
+
+    <span style="display: flex;">
+        <Card CardAction="CardAction" ThisCardIndex="0" ThisCard="dungeon.Room[0]" Refresh="StateHasChanged" />
+        <Card CardAction="CardAction" ThisCardIndex="1" ThisCard="dungeon.Room[1]" Refresh="StateHasChanged" />
+        <Card CardAction="CardAction" ThisCardIndex="2" ThisCard="dungeon.Room[2]" Refresh="StateHasChanged" />
+        <Card CardAction="CardAction" ThisCardIndex="3" ThisCard="dungeon.Room[3]" Refresh="StateHasChanged" />
+    </span>
+
+    <span style="display: flex;">
+        <Card CardAction="CardAction" ThisCardIndex="-1" ThisCard="dungeon.CurrentWeapon" />
+        <Card CardAction="CardAction" ThisCardIndex="-1" ThisCard="dungeon.LastKilledMonster" />
+        @if (dungeon.BareHands)
+        {
+            <button class="btn btn-outline-secondary fs-1 m-1" @onclick="() => dungeon.BareHands = false">&#128074;</button>
+        }
+        else
+        {
+            <button class="btn btn-outline-secondary fs-1 m-1" @onclick="() => dungeon.BareHands = true">&#9876;</button>
+        }
+    </span>
+
+    @if (dungeon.CanSkipRoom())
+    {
+        <button class="btn btn-primary" @onclick="SkipRoom">Skip this room</button>
+    }
+    else
+    {
+        <button class="btn btn-disabled" disabled>Can not skip this room</button>
+    }
+}
+@if (dungeon.State == GameState.Win)
+{
+    <p>You have won!</p>
+}
+@if (dungeon.State == GameState.Defeat)
+{
+    <p>You have been defeated</p>
+}
+<NavLink class="btn btn-secondary" href="/" Match="NavLinkMatch.All">Exit</NavLink>
+
+@code {
+    private Dungeon dungeon = new Dungeon();
+
+    private void SkipRoom() => dungeon.SkipRoom();
+    private void CardAction(int cardIndex) => dungeon.Action(cardIndex);
+}
