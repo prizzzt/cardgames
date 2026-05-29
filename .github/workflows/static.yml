@@ -42,7 +42,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './CardGames/bin/Release/net10.0/publish/wwwroot/'
+          path: './bin/Release/net10.0/publish/wwwroot/'
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v5
